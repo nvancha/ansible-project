@@ -1,0 +1,23 @@
+---
+- name: Check if Apache is running
+  command: systemctl status httpd
+  ignore_errors: true
+  register: apache_status
+  changed_when: False
+  failed_when: 
+    - apache_status.rc != 0
+    - '"inactive (dead)" not in apache_status.stdout'
+
+- name: Debug Apache running status
+  debug:
+    msg: "Apache is currently running."
+  when: apache_status.rc == 0
+
+- name: Start Apache if it's not running
+  command: systemctl start httpd
+  when: apache_status.rc != 0
+
+- name: Debug Apache started
+  debug:
+    msg: "Apache has been started."
+  when: apache_status.rc != 0
