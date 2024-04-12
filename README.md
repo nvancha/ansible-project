@@ -25,7 +25,7 @@ No dependencies on other Ansible roles.
 - `ansible.cfg`: The Ansible configuration file.
 - `hosts`: The inventory file where you define your group of servers.
 
-## Role Tasks
+### Role Tasks
 
 The tasks provided by this role are defined in `tasks/main.yml`. Here's a rundown of what each task does:
 
