@@ -1,18 +1,18 @@
 # Apache Control Ansible Role
 
-This Ansible role provides a simple way to manage the Apache HTTP Server on systems using `systemd`. With this role, you can check the status of Apache, start it if it's not running, or stop it if it is.
+This Ansible role is designed to manage the Apache HTTP Server on Linux systems that use `systemd`. The role provides functionality to check the current status of Apache, start it if it's not running, and stop it if it is running.
 
 ## Requirements
 
-There are no prerequisites required to run this role apart from Ansible itself.
+There are no prerequisites or dependencies required to use this role apart from Ansible.
 
 ## Role Variables
 
-Currently, this role does not use any variables. It's designed to work with the default configuration of Apache on systems that use `systemd` for service management.
+This role does not define any variables for configuration.
 
 ## Dependencies
 
-There are no dependencies on other roles.
+No dependencies on other Ansible roles.
 
 ## Files Structure
 
@@ -25,14 +25,43 @@ There are no dependencies on other roles.
 - `ansible.cfg`: The Ansible configuration file.
 - `hosts`: The inventory file where you define your group of servers.
 
+## Role Tasks
+
+The tasks provided by this role are defined in `tasks/main.yml`. Here's a rundown of what each task does:
+
+### Check if Apache is running
+
+This task checks the status of the Apache service using the `systemctl status httpd` command. It registers the output in a variable named `apache_status`. The task is designed not to mark the play as changed or fail under normal circumstances, except when Apache is inactive or dead and when it is not running despite an active status being reported.
+
+### Debug Apache running status
+
+If Apache is found to be running, a debug message "Apache is currently running." will be output.
+
+### Start Apache if it's not running
+
+If Apache is not running, this task will execute `systemctl start httpd` to start the Apache service. After attempting to start Apache, it will output "Apache has been started."
+
+### Stop Apache if it's running
+
+Similarly, if Apache is running, the role will execute `systemctl stop httpd` to stop the service. A debug message "Apache has been stopped." will be output to confirm the action.
+
+## Handlers
+
+The `handlers/main.yml` file contains handlers that can restart Apache when notified by other tasks in the playbook that changes requiring a restart have occurred.
+
+## Configuration
+
+You should adjust the `ansible.cfg` and `hosts` file according to your requirements and environment.
+
 ## Example Playbook
 
-To use this role, include it in your playbook as follows:
+Include this role in your Ansible playbook:
 
 ```yaml
 - hosts: all
   roles:
     - apache_control
+
 ```
 
 ## Usage
